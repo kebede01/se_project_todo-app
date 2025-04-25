@@ -3,9 +3,9 @@ class FormValidator {
     this._settings = settings;
     this._formElement = formElement;
     this._formSelector = settings.formSelector;
-    this._inputSelector = settings.inputSelector,
-      this._submitButtonSelector = settings.submitButtonSelector,
-      this._errorClass = settings.errorClass;
+    (this._inputSelector = settings.inputSelector),
+      (this._submitButtonSelector = settings.submitButtonSelector),
+      (this._errorClass = settings.errorClass);
     this._inputErrorClass = settings.inputErrorClass;
     this._inactiveButtonClass = settings.inactiveButtonClass;
   }
@@ -17,8 +17,8 @@ class FormValidator {
     inputElement.classList.add(this._inputErrorClass);
     this.errorElement.textContent = errorMessage;
     this.errorElement.classList.add(this._errorClass);
-  };
-  
+  }
+
   _hideInputError(inputElement) {
     console.log("error showing 2");
     this.errorElementId = `#${inputElement.id}-error`;
@@ -26,15 +26,12 @@ class FormValidator {
     inputElement.classList.remove(this._inputErrorClass);
     this.errorElement.classList.remove(this._errorClass);
     this.errorElement.textContent = "";
-  };
+  }
 
   _checkInputValidity(inputElement) {
     console.log("error showing 3");
     if (!inputElement.validity.valid) {
-      this._showInputError(
-        inputElement,
-        inputElement.validationMessage,
-       );
+      this._showInputError(inputElement, inputElement.validationMessage);
     } else {
       this._hideInputError(inputElement);
     }
@@ -57,26 +54,26 @@ class FormValidator {
       this.buttonElement.disabled = false;
     }
   }
-  
-  _setEventListeners () {
+
+  _setEventListeners() {
     console.log("error showing 6");
     this.inputList = Array.from(
       this._formElement.querySelectorAll(this._inputSelector)
     );
-    this.buttonElement =  this._formElement.querySelector(
+    this.buttonElement = this._formElement.querySelector(
       this._submitButtonSelector
     );
-   
+
     this._toggleButtonState(this.inputList, this.buttonElement, this._settings);
-  
+
     this.inputList.forEach((inputElement) => {
       inputElement.addEventListener("input", () => {
         this._checkInputValidity(inputElement);
-        this._toggleButtonState(  this.buttonElement);
+        this._toggleButtonState(this.buttonElement);
       });
     });
-  };
-  
+  }
+
   enableValidation() {
     console.log("error showing 7");
     // this._formElement = document.querySelector( this._formSelector);
