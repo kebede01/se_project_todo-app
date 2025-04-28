@@ -42,16 +42,14 @@ class Todo {
       this._todoElement.remove();
     });
   }
+
   _getView() {
     this._todoTemplate = document.querySelector(this._selector);
-    // console.log(this._todoTemplate);
     this._todoElement = this._todoTemplate.content
       .querySelector(".todo")
       .cloneNode(true);
     this._todoNameEl = this._todoElement.querySelector(".todo__name");
-
     this._todoNameEl.textContent = this._data.name;
-
     this._generateCheckboxElement();
     this._generateDate();
     this._setEventListeners();

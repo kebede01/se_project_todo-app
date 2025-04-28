@@ -11,7 +11,6 @@ class FormValidator {
   }
 
   _showInputError(inputElement, errorMessage) {
-    console.log("error showing 1");
     this.errorElementId = `#${inputElement.id}-error`;
     this.errorElement = this._formElement.querySelector(this.errorElementId);
     inputElement.classList.add(this._inputErrorClass);
@@ -20,7 +19,6 @@ class FormValidator {
   }
 
   _hideInputError(inputElement) {
-    console.log("error showing 2");
     this.errorElementId = `#${inputElement.id}-error`;
     this.errorElement = this._formElement.querySelector(this.errorElementId);
     inputElement.classList.remove(this._inputErrorClass);
@@ -29,7 +27,6 @@ class FormValidator {
   }
 
   _checkInputValidity(inputElement) {
-    console.log("error showing 3");
     if (!inputElement.validity.valid) {
       this._showInputError(inputElement, inputElement.validationMessage);
     } else {
@@ -38,45 +35,44 @@ class FormValidator {
   }
 
   _hasInvalidInput() {
-    console.log("error showing 4");
-    return this.inputList.some((inputElement) => {
+    return this._inputList.some((inputElement) => {
       return !inputElement.validity.valid;
     });
   }
 
-  _toggleButtonState(inputList) {
-    console.log("error showing 5");
-    if (this._hasInvalidInput(inputList)) {
-      this.buttonElement.classList.add(this._inactiveButtonClass);
-      this.buttonElement.disabled = true;
+  _toggleButtonState() {
+    if (this._hasInvalidInput()) {
+      this._buttonElement.classList.add(this._inactiveButtonClass);
+      this._buttonElement.disabled = true;
     } else {
-      this.buttonElement.classList.remove(this._inactiveButtonClass);
-      this.buttonElement.disabled = false;
+      this._buttonElement.classList.remove(this._inactiveButtonClass);
+      this._buttonElement.disabled = false;
     }
   }
 
   _setEventListeners() {
-    console.log("error showing 6");
-    this.inputList = Array.from(
+    this._inputList = Array.from(
       this._formElement.querySelectorAll(this._inputSelector)
     );
-    this.buttonElement = this._formElement.querySelector(
+    this._buttonElement = this._formElement.querySelector(
       this._submitButtonSelector
     );
 
-    this._toggleButtonState(this.inputList, this.buttonElement, this._settings);
-
-    this.inputList.forEach((inputElement) => {
+    this._toggleButtonState();
+    this._inputList.forEach((inputElement) => {
       inputElement.addEventListener("input", () => {
         this._checkInputValidity(inputElement);
-        this._toggleButtonState(this.buttonElement);
+        this._toggleButtonState();
       });
     });
   }
 
+  _resetValidation() {
+    this._formElement.reset();
+    this._buttonElement.classList.add(this._inactiveButtonClass);
+  }
+
   enableValidation() {
-    console.log("error showing 7");
-    // this._formElement = document.querySelector( this._formSelector);
     this._formElement.addEventListener("submit", (evt) => {
       evt.preventDefault();
     });
