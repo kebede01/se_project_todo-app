@@ -3,9 +3,9 @@ class FormValidator {
     this._settings = settings;
     this._formElement = formElement;
     this._formSelector = settings.formSelector;
-    (this._inputSelector = settings.inputSelector),
-      (this._submitButtonSelector = settings.submitButtonSelector),
-      (this._errorClass = settings.errorClass);
+    this._inputSelector = settings.inputSelector,
+    this._submitButtonSelector = settings.submitButtonSelector,
+    this._errorClass = settings.errorClass;
     this._inputErrorClass = settings.inputErrorClass;
     this._inactiveButtonClass = settings.inactiveButtonClass;
   }
@@ -67,8 +67,9 @@ class FormValidator {
     });
   }
 
-  _resetValidation() {
+  resetValidation() {
     this._formElement.reset();
+    this._buttonElement.disabled = true;
     this._buttonElement.classList.add(this._inactiveButtonClass);
   }
 
