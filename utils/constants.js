@@ -19,6 +19,9 @@ const initialTodos = [
   },
 ];
 
+const cardListSelector = ".todos__list";
+const addTodoButton = document.querySelector(".button_action_add");
+
 const validationConfig = {
   formSelector: ".popup__form",
   inputSelector: ".popup__input",
@@ -27,5 +30,4 @@ const validationConfig = {
   inputErrorClass: "popup__input_type_error",
   inactiveButtonClass: "button_disabled",
 };
-
-export { initialTodos, validationConfig };
+export { initialTodos, validationConfig, cardListSelector, addTodoButton };
