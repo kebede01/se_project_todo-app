@@ -44,12 +44,13 @@ class Todo {
     this._todoDeleteBtn.addEventListener("click", () => {
       this._todoElement.remove();
       this._handleDeletion(this._data.completed);
+      
+      
     });
   }
 
   getView() {
     this._todoTemplate = document.querySelector(this._selector);
-    console.log(this._todoTemplate);
     this._todoElement = this._todoTemplate.content
       .querySelector(".todo")
       .cloneNode(true);

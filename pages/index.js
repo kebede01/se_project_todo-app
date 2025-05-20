@@ -11,10 +11,26 @@ import Section from "../components/Section.js";
 import PopupWithForm from "../components/PopupWithForm.js";
 import TodoCounter from "../components/TodoCounter.js";
 
-const addTodoPopup = document.querySelector("#add-todo-popup");
-const addTodoForm = addTodoPopup.querySelector(".popup__form");
-// const addTodoCloseBtn = addTodoPopup.querySelector(".popup__close");
-// const todosList = document.querySelector(".todos__list");
+const addTodoForm = document.forms["add-todo-form"];
+
+function handleCompletion(completed) {
+  todoCounterInstanceObject.updateCompleted(completed);
+  }
+
+function handleTotal(increment) {
+  todoCounterInstanceObject.updateTotal(increment);
+}
+
+function handleDeletion(completed) {
+  if (completed) {
+    todoCounterInstanceObject.updateCompleted(false);
+     handleTotal(false);
+  }
+  else {
+    handleTotal(false);
+  }
+  }
+
 function todoCreator(data, selector, handleCompletion, handleDeletion) {
   const todoInstance = new Todo(
     data,
@@ -26,30 +42,16 @@ function todoCreator(data, selector, handleCompletion, handleDeletion) {
   return todoElement;
 }
 
-function handleCompletion(completed) {
-  todoCounterInstanceObject.updateCompleted(completed);
-}
-
-function handleDeletion(completed) {
-  if (completed) {
-    todoCounterInstanceObject.updateCompleted(false);
-  }
-}
-
-function handleTotal(increment) {
-  todoCounterInstanceObject.updateTotal(increment);
-}
+// todo card element creator
+const renderTodo = (data, selector, handleCompletion, handleDeletion) => {
+  const todo = todoCreator(data, selector, handleCompletion, handleDeletion);
+  sectionInstance.addItem(todo);
+};
 // instanciating section class that appends the todos
 const sectionInstance = new Section({
   items: initialTodos,
   renderer: (item) => {
-    const todoElement = todoCreator(
-      item,
-      "#todo-template",
-      handleCompletion,
-      handleDeletion
-    );
-    sectionInstance.addItem(todoElement);
+    renderTodo(item, "#todo-template", handleCompletion, handleDeletion);
   },
   containerSelector: cardListSelector,
 });
@@ -61,30 +63,34 @@ sectionInstance.renderItems();
 const addToDoPopupInstance = new PopupWithForm({
   popupSelector: "#add-todo-popup",
   handlerOfSubmission: (values) => {
-    const todoElement = todoCreator(
-      values,
-      "#todo-template",
-      handleCompletion,
-      handleDeletion
-    );
-    sectionInstance.addItem(todoElement);
-  },
-  handleTotal,
-});
-
-// closing popups with "Escape" key included;
-addToDoPopupInstance.setEventListeners();
+    const id = uuidv4();
+    values["id"] = id;
+    renderTodo(values, "#todo-template", handleCompletion, handleDeletion);
+  }
+  });
 
 addTodoButton.addEventListener("click", () => {
   addToDoPopupInstance.open();
-});
+  handleTotal(true);
+  handleTotal(false);
+  });
+
+
+// closing popups with "Escape" key included;
+addToDoPopupInstance.setEventListeners();
 
 const todoCounterInstanceObject = new TodoCounter(
   initialTodos,
   ".counter__text"
 );
-const text = todoCounterInstanceObject._updateText();
-sectionInstance.addItem(text);
+// The following replaces "x" and "y" by numbers in the h2 tag
+todoCounterInstanceObject._updateText();
+
+const todoForm = addToDoPopupInstance.getForm();
+todoForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+  handleTotal(true);
+});
 
 // Form validator
 const instFormValidator = new FormValidator(addTodoForm, validationConfig);
