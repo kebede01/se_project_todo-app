@@ -11,25 +11,27 @@ import Section from "../components/Section.js";
 import PopupWithForm from "../components/PopupWithForm.js";
 import TodoCounter from "../components/TodoCounter.js";
 
+const todoCounterInstanceObject = new TodoCounter(
+  initialTodos,
+  ".counter__text"
+);
+
 const addTodoForm = document.forms["add-todo-form"];
 
 function handleCompletion(completed) {
   todoCounterInstanceObject.updateCompleted(completed);
-  }
+}
 
 function handleTotal(increment) {
   todoCounterInstanceObject.updateTotal(increment);
 }
 
 function handleDeletion(completed) {
+  handleTotal(false);
   if (completed) {
     todoCounterInstanceObject.updateCompleted(false);
-     handleTotal(false);
   }
-  else {
-    handleTotal(false);
-  }
-  }
+}
 
 function todoCreator(data, selector, handleCompletion, handleDeletion) {
   const todoInstance = new Todo(
@@ -47,7 +49,7 @@ const renderTodo = (data, selector, handleCompletion, handleDeletion) => {
   const todo = todoCreator(data, selector, handleCompletion, handleDeletion);
   sectionInstance.addItem(todo);
 };
-// instanciating section class that appends the todos
+// instansiating section class that appends the todos
 const sectionInstance = new Section({
   items: initialTodos,
   renderer: (item) => {
@@ -60,38 +62,22 @@ const sectionInstance = new Section({
 sectionInstance.renderItems();
 
 // instanciating PopupWithForm class and calling its eventlistener that closes and opens a popup.
-const addToDoPopupInstance = new PopupWithForm({
+const popupWithFormObject = new PopupWithForm({
   popupSelector: "#add-todo-popup",
   handlerOfSubmission: (values) => {
     const id = uuidv4();
     values["id"] = id;
     renderTodo(values, "#todo-template", handleCompletion, handleDeletion);
-  }
-  });
-
-addTodoButton.addEventListener("click", () => {
-  addToDoPopupInstance.open();
-  handleTotal(true);
-  handleTotal(false);
-  });
-
-
-// closing popups with "Escape" key included;
-addToDoPopupInstance.setEventListeners();
-
-const todoCounterInstanceObject = new TodoCounter(
-  initialTodos,
-  ".counter__text"
-);
-// The following replaces "x" and "y" by numbers in the h2 tag
-todoCounterInstanceObject._updateText();
-
-const todoForm = addToDoPopupInstance.getForm();
-todoForm.addEventListener("submit", (e) => {
-  e.preventDefault();
-  handleTotal(true);
+    handleTotal(true);
+    instFormValidator.resetValidation();
+  },
 });
 
+addTodoButton.addEventListener("click", () => {
+  popupWithFormObject.open();
+});
+// closing popups with "Escape" key included;
+popupWithFormObject.setEventListeners();
 // Form validator
 const instFormValidator = new FormValidator(addTodoForm, validationConfig);
 instFormValidator.enableValidation();

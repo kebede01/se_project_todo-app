@@ -3,9 +3,10 @@ import Popup from "./Popup.js";
 export default class PopupWithForm extends Popup {
   constructor({ popupSelector, handlerOfSubmission }) {
     super({ popupSelector });
+    this._popupForm = this._popupElement.querySelector(".popup__form");
+    this._inputList = this._popupForm.querySelectorAll(".popup__input ");
     this.handlerOfSubmission = handlerOfSubmission;
-   
-  }
+   }
 
 _getInputValues() {
     const values = {};
@@ -21,8 +22,6 @@ setEventListeners() {
       evt.preventDefault();
       const values = this._getInputValues();
       this.handlerOfSubmission(values);
-      this._popupForm.reset();
-      this._popup__button.disabled = true;
       super.close();
     });
   }
